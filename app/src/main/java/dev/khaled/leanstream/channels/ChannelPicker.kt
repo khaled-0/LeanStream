@@ -1,4 +1,4 @@
-package dev.khaled.leanstream.channelpicker
+package dev.khaled.leanstream.channels
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -7,7 +7,7 @@ import kotlin.random.Random
 import kotlin.random.asJavaRandom
 
 @Composable
-fun ChannelPicker() {
+fun ChannelPicker(navigateTo: (route: String) -> Unit) {
 
     val list: List<String> = remember {
         List(100) { generateRandomString() }
@@ -17,7 +17,9 @@ fun ChannelPicker() {
 
     }
 
-    ChannelsGrid(items =list)
+    ChannelsGrid(items = list) {
+        navigateTo("Player")
+    }
 
 
 }
