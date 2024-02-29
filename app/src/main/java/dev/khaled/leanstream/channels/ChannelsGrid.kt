@@ -1,14 +1,17 @@
 package dev.khaled.leanstream.channels
 
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.unit.dp
@@ -20,11 +23,12 @@ import androidx.tv.material3.Card
 import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import coil.compose.AsyncImage
+import dev.khaled.leanstream.conditional
 
 val channelItemSize = 128.dp
-
+val isTouchScreen = false //TODO
 @Composable
-fun ChannelsGrid(items: List<String>, onClick: (item: String) -> Unit) {
+fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
     TvLazyVerticalGrid(
         columns = TvGridCells.Adaptive(channelItemSize), // Number of columns
         verticalArrangement = Arrangement.spacedBy(16.dp), // Spacing between rows
@@ -40,14 +44,19 @@ fun ChannelsGrid(items: List<String>, onClick: (item: String) -> Unit) {
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun GridItem(item: String, onClick: (item: String) -> Unit) {
+fun GridItem(channel: Channel, onClick: (channel: Channel) -> Unit) {
     Card(
-        onClick = { onClick.invoke(item) },
-        modifier = Modifier.size(channelItemSize),
+        onClick = { onClick.invoke(channel) },
+        modifier = Modifier
+            .size(channelItemSize)
+            .conditional(isTouchScreen) {
+                clickable { onClick.invoke(channel) }
+                clip(RoundedCornerShape(16))
+            },
         border = CardDefaults.border(focusedBorder = Border(BorderStroke(2.dp, Color.Black))),
     ) {
         AsyncImage(
-            model = item,
+            model = channel.icon,
             modifier = Modifier.fillMaxSize(),
             contentDescription = null,
             // contentScale = ContentScale.Inside,

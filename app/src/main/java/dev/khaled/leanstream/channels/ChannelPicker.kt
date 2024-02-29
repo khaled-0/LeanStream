@@ -1,38 +1,50 @@
 package dev.khaled.leanstream.channels
 
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.width
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.remember
-import kotlin.random.Random
-import kotlin.random.asJavaRandom
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
 
 @Composable
-fun ChannelPicker(navigateTo: (route: String) -> Unit) {
+fun ChannelPicker(openChannel: (channel: Channel) -> Unit) {
+    val viewModel: ChannelViewModel = viewModel()
+    val context = LocalContext.current
 
-    val list: List<String> = remember {
-        List(100) { generateRandomString() }
-    }
-    LaunchedEffect(Unit) {
-        println("LaunchedEffect: entered main")
-
+    LaunchedEffect(context) {
+        viewModel.load(context)
     }
 
-    ChannelsGrid(items = list) {
-        navigateTo("Player")
+    if (viewModel.isLoading) {
+        return Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier.width(64.dp),
+            )
+        }
     }
 
-
-}
-
-
-fun generateRandomString(): String {
-    val random = Random.asJavaRandom()
-    val length = random.nextInt(10) + 1 // Generate strings between 1 and 10 characters
-    val chars = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-    val sb = StringBuilder()
-    for (i in 0 until length) {
-        val index = random.nextInt(chars.length)
-        sb.append(chars[index])
+    if (viewModel.channels.isEmpty()) {
+        return Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            ImportPlaylistPrompt {
+                viewModel.load(context)
+            }
+        }
     }
-    return sb.toString()
+
+    ChannelsGrid(items = viewModel.channels) {
+        openChannel(it)
+    }
 }
