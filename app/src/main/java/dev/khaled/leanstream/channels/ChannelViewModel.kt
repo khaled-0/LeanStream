@@ -1,12 +1,15 @@
 package dev.khaled.leanstream.channels
 
+import android.app.Application
 import android.content.Context
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.lifecycle.ViewModel
+import androidx.lifecycle.AndroidViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.media3.common.util.UnstableApi
+import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
@@ -21,21 +24,46 @@ import androidx.annotation.OptIn as AndroidxAnnotationOptIn
 
 
 @Serializable
-data class Channel(val title: String?, val url: String, val icon: String?)
+data class Channel(val title: String?, val url: String, val icon: String?, val category: String?)
+data class ChannelCategory(val label: String?, val value: String) {
+    companion object {
+        val All: ChannelCategory = ChannelCategory("All", "")
+    }
+}
 
-class ChannelViewModel : ViewModel() {
+class ChannelViewModel(application: Application) : AndroidViewModel(application) {
+
     private val _channels = mutableStateListOf<Channel>()
-    val channels get(): List<Channel> = _channels
+    val channels
+        get(): List<Channel> = _channels.filter {
+            _categoryFilter.value.isEmpty() || it.category.equals(_categoryFilter.value)
+        }
+
+    private val _categories = mutableStateListOf<ChannelCategory>()
+    val categories get(): List<ChannelCategory> = _categories
 
     private var _isLoading by mutableStateOf(true)
     val isLoading get() = _isLoading
 
+    private var _categoryFilter by mutableStateOf(ChannelCategory.All)
+    val categoryFilter get() = _categoryFilter
+    fun applyFilter(category: ChannelCategory) {
+        _categoryFilter = category
+    }
+
     private fun channelFile(context: Context) = File(context.filesDir.absolutePath, "channel.bin")
+
+    init {
+        viewModelScope.launch { load(application.applicationContext) }
+    }
 
     @OptIn(ExperimentalSerializationApi::class)
     fun load(context: Context) {
         _isLoading = true
-        loadPlaylistFromDisk(context)
+        runCatching { loadPlaylistFromDisk(context) }
+        _categories.addAll(_channels.filter { it.category != null }
+            .groupBy { it.category!! }.keys.map { ChannelCategory(it, it) }.toList())
+        if (_categories.isNotEmpty()) _categories.add(0, ChannelCategory.All)
         _isLoading = false
     }
 
@@ -68,7 +96,12 @@ class ChannelViewModel : ViewModel() {
         if (streamEntries.isEmpty()) throw Exception("Playlist does not contain any entry")
 
         return streamEntries.map {
-            Channel(it.title, it.location.url.toExternalForm(), it.metadata.logo)
+            Channel(
+                it.title,
+                it.location.url.toExternalForm(),
+                it.metadata.logo,
+                it.metadata["group-title"]
+            )
         }
     }
 }

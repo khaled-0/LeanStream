@@ -27,16 +27,17 @@ import dev.khaled.leanstream.conditional
 
 val channelItemSize = 128.dp
 val isTouchScreen = false //TODO
+
 @Composable
 fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
     TvLazyVerticalGrid(
-        columns = TvGridCells.Adaptive(channelItemSize), // Number of columns
-        verticalArrangement = Arrangement.spacedBy(16.dp), // Spacing between rows
-        horizontalArrangement = Arrangement.spacedBy(16.dp), // Spacing between columns
-        contentPadding = PaddingValues(16.dp), // Padding around grid
+        columns = TvGridCells.Adaptive(channelItemSize),
+        verticalArrangement = Arrangement.spacedBy(16.dp),
+        horizontalArrangement = Arrangement.spacedBy(16.dp),
+        contentPadding = PaddingValues(16.dp),
     ) {
         items(items) {
-            GridItem(it, onClick) // Composable for each item
+            GridItem(it, onClick)
         }
     }
 }

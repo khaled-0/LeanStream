@@ -48,7 +48,10 @@ fun ImportPlaylistDialog(
         title = { Text(text = "Import Playlist") },
         onDismissRequest = { },
         text = {
-            TextField(value = url, onValueChange = { url = it })
+            TextField(value = url,
+                onValueChange = { url = it },
+                label = { Text("https://amongus.sus/playlist.m3u8") })
+
             if (error.isNotEmpty()) {
                 Card({ }) {
                     Row(
