@@ -1,20 +1,23 @@
-@androidx.annotation.OptIn(UnstableApi::class) package dev.khaled.leanstream.channels
+package dev.khaled.leanstream.channels
 
 import android.content.Context
-import android.net.Uri
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.media3.common.util.UnstableApi
-import androidx.media3.exoplayer.hls.playlist.HlsPlaylistParser
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromByteArray
 import kotlinx.serialization.encodeToByteArray
+import net.bjoernpetersen.m3u.M3uParser
+import net.bjoernpetersen.m3u.model.M3uEntry
 import java.io.File
+import java.net.URL
+import kotlin.OptIn
+import androidx.annotation.OptIn as AndroidxAnnotationOptIn
 
 
 @Serializable
@@ -57,9 +60,15 @@ class ChannelViewModel : ViewModel() {
         _channels.addAll(Cbor.decodeFromByteArray<List<Channel>>(bytes))
     }
 
-    fun parsePlaylist(playlistUri: Uri): List<Channel> {
-//        HlsPlaylistParser().
+    @AndroidxAnnotationOptIn(UnstableApi::class)
+    fun parsePlaylist(playlistUrl: String): List<Channel> {
+        val input = URL(playlistUrl).openStream().reader()
+        val streamEntries: List<M3uEntry> = M3uParser.parse(input)
 
-        return emptyList()
+        if (streamEntries.isEmpty()) throw Exception("Playlist does not contain any entry")
+
+        return streamEntries.map {
+            Channel(it.title, it.location.url.toExternalForm(), it.metadata.logo)
+        }
     }
 }
