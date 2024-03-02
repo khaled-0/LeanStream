@@ -35,9 +35,9 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
 
     private val _channels = mutableStateListOf<Channel>()
     val channels
-        get(): List<Channel> = _channels.filter {
-            _categoryFilter.value.isEmpty() || it.category.equals(_categoryFilter.value)
-        }
+        get(): List<Channel> = _channels.filter { matchesFilter(it) }
+
+    val isEmpty get() = _channels.isEmpty()
 
     private val _categories = mutableStateListOf<ChannelCategory>()
     val categories get(): List<ChannelCategory> = _categories
@@ -47,8 +47,19 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
 
     private var _categoryFilter by mutableStateOf(ChannelCategory.All)
     val categoryFilter get() = _categoryFilter
-    fun applyFilter(category: ChannelCategory) {
+
+    private var _searchFilter by mutableStateOf("")
+    val searchFilter get() = _searchFilter
+
+    fun applyFilter(category: ChannelCategory = _categoryFilter, search: String = _searchFilter) {
         _categoryFilter = category
+        _searchFilter = search
+    }
+
+
+    private fun matchesFilter(channel: Channel): Boolean {
+        if (searchFilter.isNotEmpty() && !channel.toString().contains(searchFilter)) return false
+        return _categoryFilter.value.isEmpty() || channel.category.equals(_categoryFilter.value)
     }
 
     private fun channelFile(context: Context) = File(context.filesDir.absolutePath, "channel.bin")

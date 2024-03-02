@@ -16,10 +16,11 @@ import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import dev.khaled.leanstream.isRunningOnTV
 
 @Composable
 fun LeanStreamTheme(
-    darkTheme: Boolean = isSystemInDarkTheme(),
+    darkTheme: Boolean = if (isRunningOnTV(LocalContext.current)) true else isSystemInDarkTheme(),
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit,
 ) {

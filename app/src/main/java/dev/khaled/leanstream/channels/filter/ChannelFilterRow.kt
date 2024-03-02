@@ -7,10 +7,12 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.TvLazyRow
 import androidx.tv.foundation.lazy.list.items
 import dev.khaled.leanstream.channels.ChannelCategory
+import dev.khaled.leanstream.playSoundEffectOnFocus
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -29,6 +31,7 @@ fun CategoryFilterRow(
                 onClick = { onSelect(it) },
                 label = { Text(it.label ?: it.value) },
                 selected = it == currentSelection,
+                modifier = Modifier.playSoundEffectOnFocus()
             )
         }
     }
