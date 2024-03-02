@@ -30,12 +30,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-@Composable
 fun Modifier.conditional(
-    condition: Boolean, modifier: @Composable Modifier.() -> Modifier
+    condition: Boolean, modifier: Modifier.() -> Modifier
 ): Modifier = if (condition) then(modifier(Modifier)) else this
 
-//TODO
 @Composable
 fun Modifier.playSoundEffectOnFocus(
     effectType: Int = AudioManager.FX_FOCUS_NAVIGATION_UP

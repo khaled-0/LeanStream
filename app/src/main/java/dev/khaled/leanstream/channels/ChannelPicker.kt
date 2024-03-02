@@ -31,7 +31,6 @@ import dev.khaled.leanstream.channels.filter.CategoryFilterRow
 import dev.khaled.leanstream.channels.filter.ChannelSearchFilter
 import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
 import dev.khaled.leanstream.isRunningOnTV
-import dev.khaled.leanstream.playSoundEffectOnFocus
 import dev.khaled.leanstream.ui.Branding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -89,7 +88,6 @@ fun ChannelPicker(openChannel: (channel: Channel) -> Unit) {
         }, actions = {
             IconToggleButton(checked = searchToggled,
                 onCheckedChange = { searchToggled = it },
-                modifier = Modifier.playSoundEffectOnFocus(),
                 content = {
                     Icon(Icons.Rounded.Search, null)
                 })
