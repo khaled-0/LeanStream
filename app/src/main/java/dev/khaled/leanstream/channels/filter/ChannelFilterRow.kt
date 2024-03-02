@@ -2,20 +2,17 @@ package dev.khaled.leanstream.channels.filter
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.shape.CornerSize
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.list.TvLazyRow
 import androidx.tv.foundation.lazy.list.items
-import androidx.tv.material3.Border
-import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.FilterChip
-import androidx.tv.material3.FilterChipDefaults
-import androidx.tv.material3.Text
 import dev.khaled.leanstream.channels.ChannelCategory
 
-@OptIn(ExperimentalTvMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CategoryFilterRow(
     channelCategories: List<ChannelCategory>,
@@ -25,21 +22,13 @@ fun CategoryFilterRow(
     TvLazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 4.dp),
+        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
     ) {
         items(channelCategories) {
             FilterChip(
                 onClick = { onSelect(it) },
-                content = { Text(it.label ?: it.value) },
+                label = { Text(it.label ?: it.value) },
                 selected = it == currentSelection,
-                shape = FilterChipDefaults.shape(
-                    FilterChipDefaults.ContainerShape.copy(CornerSize(100)),
-                ),
-                border = FilterChipDefaults.border(
-                    border = Border.None,
-                    selectedBorder = Border.None,
-                    focusedSelectedBorder = Border.None
-                )
             )
         }
     }
