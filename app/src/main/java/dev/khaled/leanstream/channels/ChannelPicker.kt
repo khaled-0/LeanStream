@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.Icon
+import dev.khaled.leanstream.channels.filter.CategoryFilterRow
 import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
 import dev.khaled.leanstream.ui.Branding
 

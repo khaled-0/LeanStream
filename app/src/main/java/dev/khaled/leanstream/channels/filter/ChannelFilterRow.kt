@@ -1,4 +1,4 @@
-package dev.khaled.leanstream.channels
+package dev.khaled.leanstream.channels.filter
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -13,6 +13,7 @@ import androidx.tv.material3.ExperimentalTvMaterial3Api
 import androidx.tv.material3.FilterChip
 import androidx.tv.material3.FilterChipDefaults
 import androidx.tv.material3.Text
+import dev.khaled.leanstream.channels.ChannelCategory
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable

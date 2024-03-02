@@ -1,6 +1,7 @@
 package dev.khaled.leanstream
 
 import android.content.Context
+import android.content.pm.PackageManager
 import android.media.AudioManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,7 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
-import dev.khaled.leanstream.ui.theme.LeanStreamTheme
+import dev.khaled.leanstream.ui.LeanStreamTheme
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -28,8 +30,10 @@ class MainActivity : ComponentActivity() {
     }
 }
 
-fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier =
-    if (condition) then(modifier(Modifier)) else this
+@Composable
+fun Modifier.conditional(
+    condition: Boolean, modifier: @Composable Modifier.() -> Modifier
+): Modifier = if (condition) then(modifier(Modifier)) else this
 
 //TODO
 @Composable
@@ -41,8 +45,11 @@ fun Modifier.playSoundEffectOnFocus(
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
     return this.onFocusChanged {
-            if (it.isFocused) {
-                audioManager.playSoundEffect(effectType)
-            }
+        if (it.isFocused) {
+            audioManager.playSoundEffect(effectType)
         }
+    }
 }
+
+fun isRunningOnTV(context: Context): Boolean =
+    context.packageManager.hasSystemFeature(PackageManager.FEATURE_LEANBACK)

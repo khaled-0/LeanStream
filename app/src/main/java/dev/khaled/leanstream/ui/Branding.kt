@@ -1,17 +1,20 @@
 package dev.khaled.leanstream.ui
 
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.size
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.Text
+import dev.khaled.leanstream.R
 
 
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun Branding() {
     Row(
@@ -24,13 +27,11 @@ fun Branding() {
             )
         )
 
-        Text(
-            text = "Stream", style = TextStyle.Default.copy(
-                fontSize = 30.sp, drawStyle = Stroke(
-                    miter = 10f,
-                    width = 1.5f,
-                )
-            )
+        Icon(
+            painter = painterResource(id = R.drawable.round_stream_24),
+            contentDescription = null,
+            tint = MaterialTheme.colorScheme.primary,
+            modifier = Modifier.size(48.dp)
         )
     }
 }

@@ -3,12 +3,14 @@ package dev.khaled.leanstream.channels
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,6 +26,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.grid.TvGridCells
 import androidx.tv.foundation.lazy.grid.TvLazyVerticalGrid
@@ -34,10 +37,10 @@ import androidx.tv.material3.CardDefaults
 import androidx.tv.material3.ExperimentalTvMaterial3Api
 import coil.compose.AsyncImage
 import dev.khaled.leanstream.conditional
+import dev.khaled.leanstream.isRunningOnTV
+import dev.khaled.leanstream.playSoundEffectOnFocus
 
 val channelItemSize = 128.dp
-val isTouchScreen = false //TODO
-
 
 @Composable
 fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
@@ -69,31 +72,40 @@ fun GridItem(
     hadFocusBeforeNavigation: Boolean,
     onFocusChanged: (FocusState) -> Unit,
 ) {
+    val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
+    val isTouchScreen = remember { !isRunningOnTV(context) }
 
     Card(
         onClick = { onClick.invoke(channel) },
         modifier = Modifier
             .size(channelItemSize)
-            .onFocusChanged(onFocusChanged)
-            .focusRequester(focusRequester)
-            .conditional(hadFocusBeforeNavigation) {
-                onGloballyPositioned {
-                    focusRequester.requestFocus()
+            .conditional(!isTouchScreen) {
+                playSoundEffectOnFocus()
+                onFocusChanged(onFocusChanged)
+                focusRequester(focusRequester)
+                conditional(hadFocusBeforeNavigation) {
+                    onGloballyPositioned {
+                        focusRequester.requestFocus()
+                    }
                 }
             }
             .conditional(isTouchScreen) {
-                clickable { onClick.invoke(channel) }
-                clip(RoundedCornerShape(16))
+                clip(RoundedCornerShape(8))
             },
         border = CardDefaults.border(focusedBorder = Border(BorderStroke(2.dp, Color.Black))),
+        colors = CardDefaults.colors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
     ) {
-        AsyncImage(
-            model = channel.icon,
-            modifier = Modifier.fillMaxSize(),
-            contentDescription = null,
-            error = rememberVectorPainter(Icons.Rounded.BrokenImage),
-        )
+        Box(modifier = Modifier.conditional(isTouchScreen) {
+            clickable { onClick.invoke(channel) }
+        }) {
+            AsyncImage(
+                model = channel.icon,
+                modifier = Modifier.fillMaxSize(),
+                contentDescription = null,
+                error = rememberVectorPainter(Icons.Rounded.BrokenImage),
+            )
+        }
     }
 }
 
