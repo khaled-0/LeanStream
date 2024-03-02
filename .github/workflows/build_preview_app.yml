@@ -28,6 +28,6 @@ jobs:
       - name: Download Build Artifact
         uses: actions/download-artifact@v4.1.4
         with:
-          path: app/build/outputs/preview/app-preview.apk
+          path: app/build/outputs/apk/preview/app-preview.apk
 
           
