@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.VideoLibrary
 import androidx.compose.material3.Button
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -15,12 +17,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.Icon
-import androidx.tv.material3.Text
 import dev.khaled.leanstream.playSoundEffectOnFocus
 
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun ImportPlaylistPrompt(result: () -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
@@ -29,9 +27,7 @@ fun ImportPlaylistPrompt(result: () -> Unit) {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            Icons.Rounded.VideoLibrary,
-            modifier = Modifier.size(64.dp),
-            contentDescription = null
+            Icons.Rounded.VideoLibrary, modifier = Modifier.size(64.dp), contentDescription = null
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "No entries found. Import a playlist (.m3u8) below")
@@ -43,12 +39,10 @@ fun ImportPlaylistPrompt(result: () -> Unit) {
 
     when {
         showDialog -> {
-            ImportPlaylistDialog(
-                onDismiss = {
-                    showDialog = false
-                    if (it) result()
-                }
-            )
+            ImportPlaylistDialog(onDismiss = {
+                showDialog = false
+                if (it) result()
+            })
         }
     }
 }

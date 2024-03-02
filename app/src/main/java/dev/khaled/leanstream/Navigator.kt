@@ -1,9 +1,6 @@
 package dev.khaled.leanstream
 
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -22,13 +19,12 @@ import kotlinx.serialization.encodeToHexString
 
 @OptIn(ExperimentalSerializationApi::class)
 @Composable
-fun Navigator(paddingValues: PaddingValues) {
+fun Navigator() {
     val navController = rememberNavController()
 
     NavHost(
         navController = navController,
         startDestination = Route.ChannelPicker.route,
-        modifier = Modifier.padding(paddingValues)
     ) {
 
         composable(route = Route.ChannelPicker.route) {
@@ -37,9 +33,8 @@ fun Navigator(paddingValues: PaddingValues) {
             }
         }
 
-        composable(route = "${Route.Player.route}/{channel}", arguments = listOf(
-            navArgument("channel") { type = NavType.StringType }
-        )) {
+        composable(route = "${Route.Player.route}/{channel}",
+            arguments = listOf(navArgument("channel") { type = NavType.StringType })) {
             val serializedChannel = it.arguments?.getString("channel") ?: return@composable
             val channel = Cbor.decodeFromHexString<Channel>(serializedChannel)
             Player(channel = channel) {

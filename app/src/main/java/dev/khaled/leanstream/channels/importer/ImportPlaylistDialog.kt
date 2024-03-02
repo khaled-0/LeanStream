@@ -6,9 +6,13 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LibraryAdd
 import androidx.compose.material.icons.rounded.Error
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
@@ -21,17 +25,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import androidx.tv.material3.Card
-import androidx.tv.material3.ExperimentalTvMaterial3Api
-import androidx.tv.material3.Icon
-import androidx.tv.material3.Text
 import dev.khaled.leanstream.channels.Channel
 import dev.khaled.leanstream.channels.ChannelViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
-@OptIn(ExperimentalTvMaterial3Api::class, ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ImportPlaylistDialog(
     onDismiss: (success: Boolean) -> Unit,
@@ -48,9 +48,9 @@ fun ImportPlaylistDialog(
         title = { Text(text = "Import Playlist") },
         onDismissRequest = { },
         text = {
-            TextField(value = url,
+            OutlinedTextField(value = url,
                 onValueChange = { url = it },
-                label = { Text("https://amongus.sus/playlist.m3u8") })
+                placeholder = { Text("https://amongus.sus/playlist.m3u8") })
 
             if (error.isNotEmpty()) {
                 Card({ }) {

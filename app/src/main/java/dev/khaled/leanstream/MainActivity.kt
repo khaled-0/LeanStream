@@ -5,21 +5,23 @@ import android.media.AudioManager
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import dev.khaled.leanstream.ui.theme.LeanStreamTheme
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        installSplashScreen()
         super.onCreate(savedInstanceState)
         setContent {
             LeanStreamTheme {
-                Scaffold {
-                    Navigator(it)
+                Surface {
+                    Navigator()
                 }
             }
         }
@@ -38,8 +40,7 @@ fun Modifier.playSoundEffectOnFocus(
     val audioManager = remember {
         context.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
-    return this
-        .onFocusChanged {
+    return this.onFocusChanged {
             if (it.isFocused) {
                 audioManager.playSoundEffect(effectType)
             }
