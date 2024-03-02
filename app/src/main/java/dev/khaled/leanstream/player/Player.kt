@@ -29,6 +29,7 @@ fun Player(channel: Channel, navigateBack: () -> Unit) {
         onDispose { exoPlayer.release() }
     }
 
+
     AndroidView(
         modifier = Modifier.fillMaxSize(),
         factory = {
@@ -38,5 +39,4 @@ fun Player(channel: Channel, navigateBack: () -> Unit) {
             }
         },
     )
-
 }

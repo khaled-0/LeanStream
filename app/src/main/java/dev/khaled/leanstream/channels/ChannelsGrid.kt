@@ -10,10 +10,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.BrokenImage
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.FocusState
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.dp
 import androidx.tv.foundation.lazy.grid.TvGridCells
 import androidx.tv.foundation.lazy.grid.TvLazyVerticalGrid
@@ -28,16 +38,24 @@ import dev.khaled.leanstream.conditional
 val channelItemSize = 128.dp
 val isTouchScreen = false //TODO
 
+
 @Composable
 fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
+    var lastFocusedChannel by rememberSaveable { mutableStateOf<Int?>(null) }
+
     TvLazyVerticalGrid(
         columns = TvGridCells.Adaptive(channelItemSize),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
         contentPadding = PaddingValues(16.dp),
     ) {
-        items(items) {
-            GridItem(it, onClick)
+        items(items) { channel ->
+            GridItem(channel, onClick = {
+                onClick(it)
+                lastFocusedChannel = channel.hashCode()
+            }, hadFocusBeforeNavigation = lastFocusedChannel == channel.hashCode()) {
+                if (it.hasFocus) lastFocusedChannel = null
+            }
         }
     }
 }
@@ -45,11 +63,25 @@ fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
 
 @OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
-fun GridItem(channel: Channel, onClick: (channel: Channel) -> Unit) {
+fun GridItem(
+    channel: Channel,
+    onClick: (channel: Channel) -> Unit,
+    hadFocusBeforeNavigation: Boolean,
+    onFocusChanged: (FocusState) -> Unit,
+) {
+    val focusRequester = remember { FocusRequester() }
+
     Card(
         onClick = { onClick.invoke(channel) },
         modifier = Modifier
             .size(channelItemSize)
+            .onFocusChanged(onFocusChanged)
+            .focusRequester(focusRequester)
+            .conditional(hadFocusBeforeNavigation) {
+                onGloballyPositioned {
+                    focusRequester.requestFocus()
+                }
+            }
             .conditional(isTouchScreen) {
                 clickable { onClick.invoke(channel) }
                 clip(RoundedCornerShape(16))
@@ -60,7 +92,6 @@ fun GridItem(channel: Channel, onClick: (channel: Channel) -> Unit) {
             model = channel.icon,
             modifier = Modifier.fillMaxSize(),
             contentDescription = null,
-            // contentScale = ContentScale.Inside,
             error = rememberVectorPainter(Icons.Rounded.BrokenImage),
         )
     }

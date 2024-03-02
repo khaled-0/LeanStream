@@ -43,9 +43,8 @@ fun Navigator(paddingValues: PaddingValues) {
             val serializedChannel = it.arguments?.getString("channel") ?: return@composable
             val channel = Cbor.decodeFromHexString<Channel>(serializedChannel)
             Player(channel = channel) {
-                navController.navigateSingleTop(Route.ChannelPicker.route)
+                navController.popBackStack()
             }
-
         }
     }
 }
