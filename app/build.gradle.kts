@@ -21,6 +21,18 @@ android {
     }
 
     buildTypes {
+        named("debug") {
+            applicationIdSuffix = ".debug"
+        }
+
+        create("preview") {
+            initWith(getByName("release"))
+
+            signingConfig = signingConfigs.getByName("debug")
+            val debugType = getByName("debug")
+            applicationIdSuffix = debugType.applicationIdSuffix
+        }
+
         release {
             isMinifyEnabled = true
             isShrinkResources = true
@@ -55,19 +67,19 @@ dependencies {
     //TODO: Remove unused stuffs
     implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.tv:tv-foundation:1.0.0-alpha10")
     implementation("androidx.tv:tv-material:1.0.0-alpha10")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
     implementation("androidx.activity:activity-compose:1.8.2")
-    implementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    implementation(platform("androidx.compose:compose-bom:2024.02.01"))
     implementation("androidx.compose.ui:ui")
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.material3:material3")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.01"))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2023.08.00"))
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.02.01"))
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
