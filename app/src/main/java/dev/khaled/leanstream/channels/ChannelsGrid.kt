@@ -93,7 +93,9 @@ fun GridItem(
             .playSoundEffectOnFocus()
             .onFocusChanged(onFocusChanged)
             .conditional(!isTouchScreen) { focusRequester(focusRequester) }
-            .conditional(hadFocusBeforeNavigation) { onGloballyPositioned { focusRequester.requestFocus() } }
+            .conditional(!isTouchScreen && hadFocusBeforeNavigation) {
+                onGloballyPositioned { focusRequester.requestFocus() }
+            }
             .conditional(isTouchScreen) { clip(RoundedCornerShape(8)) },
         border = CardDefaults.border(
             focusedBorder = Border(

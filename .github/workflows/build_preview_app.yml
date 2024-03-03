@@ -12,9 +12,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           java-version: '17'
           distribution: adopt
@@ -24,10 +24,12 @@ jobs:
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew assemblePreview
+      - name: List
+        run: tree
 
       - name: Download Build Artifact
         uses: actions/download-artifact@v4.1.4
         with:
           path: app/build/outputs/apk/preview/app-preview.apk
-
+          if-no-files-found: error
           
