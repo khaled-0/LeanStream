@@ -1,8 +1,19 @@
+import java.io.BufferedReader
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("plugin.serialization") version "1.9.22"
 }
+
+val gitCommitHash = Runtime.getRuntime().exec("git rev-parse --short HEAD").let { process ->
+        process.waitFor()
+        val output = process.inputStream.use {
+            it.bufferedReader().use(BufferedReader::readText)
+        }
+        process.destroy()
+        output.trim()
+    }
 
 android {
     namespace = "dev.khaled.leanstream"
@@ -30,6 +41,7 @@ android {
 
             signingConfig = signingConfigs.getByName("debug")
             val debugType = getByName("debug")
+            versionNameSuffix = gitCommitHash
             applicationIdSuffix = debugType.applicationIdSuffix
         }
 
@@ -37,8 +49,7 @@ android {
             isMinifyEnabled = true
             isShrinkResources = true
             proguardFiles(
-                getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )
         }
     }

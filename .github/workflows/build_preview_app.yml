@@ -1,10 +1,11 @@
-name: Android CI
+name: Build Preview
 
 on:
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -18,18 +19,20 @@ jobs:
         with:
           java-version: '17'
           distribution: adopt
-          cache: gradle
+#          cache: gradle
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew assemblePreview
-      - name: List
-        run: tree
+
+
+      - name: WHAT
+        run: tree ${{ github.workspace }}/app/build/outputs/apk
 
       - name: Download Build Artifact
-        uses: actions/download-artifact@v4.1.4
+        uses: actions/download-artifact@v3
         with:
-          path: app/build/outputs/apk/preview/app-preview.apk
-          if-no-files-found: error
-          
+          path: |
+            ${{ github.workspace }}/app/
+
