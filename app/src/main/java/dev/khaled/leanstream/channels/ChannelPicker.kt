@@ -11,8 +11,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Settings
 import androidx.compose.material.icons.rounded.Search
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconToggleButton
@@ -72,7 +72,7 @@ fun ChannelPicker(openChannel: (channel: Channel) -> Unit) {
                 Branding()
 
                 if (compactAppBar) {
-                    Divider(
+                    HorizontalDivider(
                         modifier = Modifier
                             .padding(start = 16.dp)
                             .height(16.dp)
