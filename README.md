@@ -1,3 +1,5 @@
+<img src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/stream/default/48px.svg" height="128px" align="left">
+
 # LeanStream
 
 This project aims to simplify the process of enjoying content from M3U playlists on your Android TV.
@@ -20,7 +22,7 @@ Get the app from the [releases](https://github.com/khaled-0/LeanStream/releases/
 Or, a snapshot (unstable) version from [actions](https://github.com/khaled-0/LeanStream/actions)
 page
 
-### Or, Build From Source
+## Build From Source
 
 #### Prerequisites
 

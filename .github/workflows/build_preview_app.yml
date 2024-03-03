@@ -26,10 +26,6 @@ jobs:
       - name: Build with Gradle
         run: ./gradlew assemblePreview
 
-
-      - name: WHAT
-        run: tree ${{ github.workspace }}/app/build/outputs/apk
-
       - name: Download Build Artifact
         uses: actions/upload-artifact@v4
         with:
