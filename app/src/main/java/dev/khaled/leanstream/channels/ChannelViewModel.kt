@@ -74,10 +74,16 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
     @OptIn(ExperimentalSerializationApi::class)
     fun load(context: Context) {
         _isLoading = true
+
         runCatching { loadPlaylistFromDisk(context) }
+
         _categories.addAll(_channels.filter { it.category != null }
-            .groupBy { it.category!! }.keys.map { ChannelCategory(it, it) }.toList())
+            .groupBy { it.category!! }.keys.map { categories ->
+                categories.split(";").map { ChannelCategory(it, it) }
+            }.flatten().distinctBy { it.value })
+
         if (_categories.isNotEmpty()) _categories.add(0, ChannelCategory.All)
+
         _isLoading = false
     }
 
