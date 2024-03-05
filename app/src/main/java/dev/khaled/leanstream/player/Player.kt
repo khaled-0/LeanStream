@@ -39,4 +39,5 @@ fun Player(channel: Channel, navigateBack: () -> Unit) {
             }
         },
     )
+
 }

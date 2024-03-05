@@ -26,7 +26,8 @@ fun LeanStreamTheme(
 ) {
 
     val darkColorScheme = darkColorScheme(
-        primary = Color(0xFFEA526F), secondary = Color(0xFF070600), tertiary = Color(0xFFEA526F)
+        primary = Color(0xFFEA526F), secondary = Color(0xFF070600), tertiary = Color(0xFFEA526F),
+        surface = Color(0xFF000000)
     )
 
 

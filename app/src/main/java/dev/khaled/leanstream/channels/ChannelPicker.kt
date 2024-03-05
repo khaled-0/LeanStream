@@ -31,13 +31,16 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import dev.khaled.leanstream.channels.filter.CategoryFilterRow
 import dev.khaled.leanstream.channels.filter.ChannelSearchFilter
 import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
+import dev.khaled.leanstream.channels.item.ChannelsGrid
 import dev.khaled.leanstream.isRunningOnTV
 import dev.khaled.leanstream.ui.Branding
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelPicker(openChannel: (channel: Channel) -> Unit) {
-    val viewModel: ChannelViewModel = viewModel()
+fun ChannelPicker(
+    viewModel: ChannelViewModel = viewModel(),
+    openChannel: (channel: Channel) -> Unit
+) {
     val context = LocalContext.current
     val compactAppBar = remember { isRunningOnTV(context) }
 

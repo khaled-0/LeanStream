@@ -20,6 +20,6 @@ fun ChannelSearchFilter(
             .padding(horizontal = 16.dp),
             value = currentValue,
             onValueChange = onEdit,
-            placeholder = { Text("Search for channel by title, url, category") })
+            placeholder = { Text("Search for channel by title, url or category") })
     }
 }
