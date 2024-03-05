@@ -1,5 +1,6 @@
 package dev.khaled.leanstream.channels.filter
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.OutlinedTextField
@@ -13,10 +14,12 @@ fun ChannelSearchFilter(
     currentValue: String,
     onEdit: (String) -> Unit,
 ) {
-    OutlinedTextField(modifier = Modifier
-        .fillMaxWidth()
-        .padding(horizontal = 16.dp),
-        value = currentValue,
-        onValueChange = onEdit,
-        placeholder = { Text("Search for channel by title, url, category") })
+    Box(Modifier.padding(bottom = 8.dp)) {
+        OutlinedTextField(modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 16.dp),
+            value = currentValue,
+            onValueChange = onEdit,
+            placeholder = { Text("Search for channel by title, url, category") })
+    }
 }

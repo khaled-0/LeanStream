@@ -58,7 +58,10 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
 
 
     private fun matchesFilter(channel: Channel): Boolean {
-        if (searchFilter.isNotEmpty() && !channel.toString().contains(searchFilter)) return false
+        if (searchFilter.isNotEmpty() && !channel.toString().lowercase()
+                .contains(searchFilter.lowercase())
+        ) return false
+
         return _categoryFilter.value.isEmpty() || channel.category.equals(_categoryFilter.value)
     }
 
