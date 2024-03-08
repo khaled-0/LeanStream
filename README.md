@@ -1,4 +1,4 @@
-<img src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/stream/default/48px.svg" height="128px" align="left">
+<img src="https://raw.githubusercontent.com/khaled-0/LeanStream/main/play_hi_res_512.png" height="128px" align="left">
 
 # LeanStream
 
