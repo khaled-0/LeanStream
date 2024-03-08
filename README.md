@@ -1,4 +1,4 @@
-<img src="https://fonts.gstatic.com/s/i/short-term/release/materialsymbolsoutlined/stream/default/48px.svg" height="128px" align="left">
+<img src="https://raw.githubusercontent.com/khaled-0/LeanStream/main/play_hi_res_512.png" height="128px" align="left">
 
 # LeanStream
 
@@ -14,6 +14,10 @@ This project aims to simplify the process of enjoying content from M3U playlists
   playlists.
 * **User-friendly Interface:** The app boasts a clean and user-friendly interface designed
   specifically for the Android TV environment, making it easy to navigate and control playback.
+
+## Screenshots
+![image](https://github.com/khaled-0/LeanStream/assets/74397286/a9e19593-47f5-46bb-aae6-02491d352bfa)
+
 
 ## Download
 

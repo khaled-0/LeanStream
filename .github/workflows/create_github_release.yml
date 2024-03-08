@@ -22,18 +22,18 @@ jobs:
           cache: gradle
 
       - name: Create release key
-        env:
-          LEANSTREAM_JKS: ${{ LEANSTREAM_JKS }}
         run: |
-          echo $LEANSTREAM_JKS > leanstream.b64
-          base64 --decode > leanstream.jks
+          echo "$LEANSTREAM_JKS" > leanstream.b64
+          base64 --decode leanstream.b64 > leanstream.jks
+        env:
+          LEANSTREAM_JKS: ${{ secrets.LEANSTREAM_JKS }}
 
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Build with Gradle
         run: ./gradlew assembleRelease
         env:
-          LEANSTREAM_KEY_PASSWORD: ${{ LEANSTREAM_KEY_PASSWORD }}
+          LEANSTREAM_KEY_PASSWORD: ${{ secrets.LEANSTREAM_KEY_PASSWORD }}
 
       - name: Release
         uses: softprops/action-gh-release@v1
