@@ -7,13 +7,13 @@ plugins {
 }
 
 val gitCommitHash = Runtime.getRuntime().exec("git rev-parse --short HEAD").let { process ->
-        process.waitFor()
-        val output = process.inputStream.use {
-            it.bufferedReader().use(BufferedReader::readText)
-        }
-        process.destroy()
-        output.trim()
+    process.waitFor()
+    val output = process.inputStream.use {
+        it.bufferedReader().use(BufferedReader::readText)
     }
+    process.destroy()
+    output.trim()
+}
 
 android {
     namespace = "dev.khaled.leanstream"
@@ -29,6 +29,15 @@ android {
             useSupportLibrary = true
         }
 
+    }
+
+    signingConfigs {
+        create("release") {
+            keyAlias = "leanstream"
+            keyPassword = System.getenv("LEANSTREAM_KEY_PASSWORD")
+            storeFile = file("../leanstream.jks")
+            storePassword = System.getenv("LEANSTREAM_KEY_PASSWORD")
+        }
     }
 
     buildTypes {
@@ -48,6 +57,7 @@ android {
         release {
             isMinifyEnabled = true
             isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
             )

@@ -1,0 +1,50 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - "v*.*.*"
+
+  workflow_dispatch:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: set up JDK
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: adopt
+          cache: gradle
+
+      - name: Create release key
+        env:
+          LEANSTREAM_JKS: ${{ LEANSTREAM_JKS }}
+        run: |
+          echo $LEANSTREAM_JKS > leanstream.b64
+          base64 --decode > leanstream.jks
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Build with Gradle
+        run: ./gradlew assembleRelease
+        env:
+          LEANSTREAM_KEY_PASSWORD: ${{ LEANSTREAM_KEY_PASSWORD }}
+
+      - name: Release
+        uses: softprops/action-gh-release@v1
+        if: startsWith(github.ref, 'refs/tags/')
+        with:
+          files: app/build/outputs/apk/release/app-release.apk
+
+
+      - name: Download Build Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LeanStream-Release-${{ github.sha }}
+          path: app/build/outputs/apk/release/app-release.apk
+
