@@ -1,5 +1,7 @@
 package dev.khaled.leanstream.channels
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +17,8 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconToggleButton
+import androidx.compose.material3.LocalContentColor
+import androidx.compose.material3.OutlinedIconToggleButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -25,6 +28,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -33,6 +37,7 @@ import dev.khaled.leanstream.channels.filter.ChannelSearchFilter
 import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
 import dev.khaled.leanstream.channels.item.ChannelsGrid
 import dev.khaled.leanstream.isRunningOnTV
+import dev.khaled.leanstream.playSoundEffectOnFocus
 import dev.khaled.leanstream.ui.Branding
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -66,6 +71,7 @@ fun ChannelPicker(
 
 
     var searchToggled by rememberSaveable { mutableStateOf(false) }
+    val interactionSource = remember { MutableInteractionSource() }
 
     Column {
 
@@ -90,8 +96,13 @@ fun ChannelPicker(
                 }
             }
         }, actions = {
-            IconToggleButton(checked = searchToggled,
+            var focused by remember { mutableStateOf(false) }
+            OutlinedIconToggleButton(checked = searchToggled,
                 onCheckedChange = { searchToggled = it },
+                modifier = Modifier
+                    .playSoundEffectOnFocus()
+                    .onFocusEvent { state -> focused = state.isFocused },
+                border = if (focused) BorderStroke(2.dp, LocalContentColor.current) else null,
                 content = {
                     Icon(Icons.Rounded.Search, null)
                 })

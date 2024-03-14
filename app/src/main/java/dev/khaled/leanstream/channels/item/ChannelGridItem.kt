@@ -66,7 +66,7 @@ fun GridItem(
         border = CardDefaults.border(
             focusedBorder = Border(
                 BorderStroke(
-                    3.5.dp, MaterialTheme.colorScheme.primary
+                    4.dp, MaterialTheme.colorScheme.primary
                 )
             )
         ),

@@ -13,13 +13,19 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import dev.khaled.leanstream.channels.Channel
 
-val channelItemSize = 128.dp
 
 @Composable
 fun ChannelsGrid(items: List<Channel>, onClick: (channel: Channel) -> Unit) {
+    val channelItemSize =
+        when (LocalContext.current.resources.displayMetrics.densityDpi) {
+            in 250..999 -> 128.dp
+            else -> 150.dp
+        }
+
     var lastFocusedChannel by rememberSaveable { mutableStateOf<Int?>(null) }
 
     LazyVerticalGrid(
