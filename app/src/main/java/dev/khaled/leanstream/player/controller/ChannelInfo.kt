@@ -19,20 +19,20 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.rememberVectorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaMetadata
 import coil.compose.AsyncImage
-import dev.khaled.leanstream.channels.Channel
 
 @Composable
-fun ChannelInfo(channel: Channel) {
+fun ChannelInfo(metadata: MediaMetadata) {
     Card {
         Row(Modifier.padding(8.dp), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                text = channel.title ?: channel.url,
+                text = metadata.displayTitle.toString(),
                 style = MaterialTheme.typography.titleLarge,
             )
             Spacer(modifier = Modifier.width(8.dp))
             AsyncImage(
-                model = channel.icon,
+                model = metadata.artworkUri,
                 modifier = Modifier
                     .size(48.dp)
                     .clip(CircleShape)

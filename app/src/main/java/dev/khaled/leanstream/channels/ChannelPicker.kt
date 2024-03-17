@@ -1,7 +1,6 @@
 package dev.khaled.leanstream.channels
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -71,7 +70,6 @@ fun ChannelPicker(
 
 
     var searchToggled by rememberSaveable { mutableStateOf(false) }
-    val interactionSource = remember { MutableInteractionSource() }
 
     Column {
 
