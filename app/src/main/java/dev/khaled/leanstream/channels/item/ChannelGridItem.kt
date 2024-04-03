@@ -51,7 +51,7 @@ fun GridItem(
     val context = LocalContext.current
     val focusRequester = remember { FocusRequester() }
     val isTouchScreen = remember { !isRunningOnTV(context) }
-    val showChannelTitle = isTouchScreen //TODO
+    val showChannelTitle = isTouchScreen || channel.icon.isNullOrBlank() //TODO
 
     Card(
         onClick = { onClick.invoke(channel) },

@@ -1,5 +1,8 @@
 package dev.khaled.leanstream.channels
 
+import android.app.AlertDialog
+import android.content.Context
+import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,12 +41,13 @@ import dev.khaled.leanstream.channels.item.ChannelsGrid
 import dev.khaled.leanstream.isRunningOnTV
 import dev.khaled.leanstream.playSoundEffectOnFocus
 import dev.khaled.leanstream.ui.Branding
+import kotlinx.serialization.ExperimentalSerializationApi
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ChannelPicker(
-    viewModel: ChannelViewModel = viewModel(),
-    openChannel: (channel: Channel) -> Unit
+fun ChannelPickerScreen(
+    viewModel: ChannelViewModel = viewModel(), openChannel: (channel: Channel) -> Unit
 ) {
     val context = LocalContext.current
     val compactAppBar = remember { isRunningOnTV(context) }
@@ -106,7 +110,7 @@ fun ChannelPicker(
                 })
 
             IconButton(onClick = {
-
+                resetChannelsListConfirmation(context, viewModel)
             }, content = {
                 Icon(Icons.Outlined.Settings, null)
             })
@@ -127,4 +131,14 @@ fun ChannelPicker(
             openChannel(it)
         }
     }
+}
+
+@OptIn(ExperimentalSerializationApi::class)
+fun resetChannelsListConfirmation(context: Context, viewModel: ChannelViewModel) {
+    AlertDialog.Builder(context).setTitle("Reset Channels")
+        .setMessage("Do you really want to remove imported channels?")
+        .setPositiveButton("Yes") { _, _ ->
+            viewModel.savePlaylistToDisk(context, emptyList());
+            Toast.makeText(context, "Restart Application To Take Effect", Toast.LENGTH_SHORT).show()
+        }.setNegativeButton("No", null).show()
 }

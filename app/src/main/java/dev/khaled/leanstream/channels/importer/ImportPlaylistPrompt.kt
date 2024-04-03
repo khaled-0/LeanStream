@@ -3,11 +3,12 @@ package dev.khaled.leanstream.channels.importer
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.VideoLibrary
-import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -24,7 +25,7 @@ fun ImportPlaylistPrompt(result: () -> Unit) {
     var showDialog by remember { mutableStateOf(false) }
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.padding(16.dp), horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
             Icons.Rounded.VideoLibrary, modifier = Modifier.size(64.dp), contentDescription = null
@@ -32,7 +33,9 @@ fun ImportPlaylistPrompt(result: () -> Unit) {
         Spacer(modifier = Modifier.height(8.dp))
         Text(text = "No entries found. Import a playlist (.m3u8) below")
         Spacer(modifier = Modifier.height(8.dp))
-        Button(onClick = { showDialog = true }, modifier = Modifier.playSoundEffectOnFocus()) {
+        OutlinedButton(
+            onClick = { showDialog = true }, modifier = Modifier.playSoundEffectOnFocus()
+        ) {
             Text(text = "Import")
         }
     }

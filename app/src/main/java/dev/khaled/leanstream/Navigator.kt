@@ -10,9 +10,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import dev.khaled.leanstream.channels.Channel
-import dev.khaled.leanstream.channels.ChannelPicker
+import dev.khaled.leanstream.channels.ChannelPickerScreen
 import dev.khaled.leanstream.channels.ChannelViewModel
-import dev.khaled.leanstream.player.Player
+import dev.khaled.leanstream.player.PlayerScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromHexString
@@ -30,7 +30,7 @@ fun Navigator() {
     ) {
 
         composable(route = Route.ChannelPicker.route) {
-            ChannelPicker(channelViewModel) { channel ->
+            ChannelPickerScreen(channelViewModel) { channel ->
                 navController.navigateSingleTop(Route.Player.launch(channel))
             }
         }
@@ -41,7 +41,7 @@ fun Navigator() {
         ) {
             val serializedChannel = it.arguments?.getString("channel") ?: return@composable
             val channel = Cbor.decodeFromHexString<Channel>(serializedChannel)
-            Player(channel = channel, channelViewModel.channels) {
+            PlayerScreen(channel = channel, channelViewModel.channels) {
                 navController.popBackStack()
             }
         }

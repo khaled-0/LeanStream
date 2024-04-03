@@ -19,7 +19,7 @@ import dev.khaled.leanstream.player.controller.PlayerController
 
 
 @Composable
-fun Player(channel: Channel, playlist: List<Channel>, navigateBack: () -> Unit) {
+fun PlayerScreen(channel: Channel, playlist: List<Channel>, navigateBack: () -> Unit) {
     val exoPlayer = rememberExoPlayer(LocalContext.current)
 
     LaunchedEffect(Unit) {
@@ -27,7 +27,7 @@ fun Player(channel: Channel, playlist: List<Channel>, navigateBack: () -> Unit) 
             exoPlayer.addMediaItem(
                 MediaItem.Builder().setUri(it.url).setMediaMetadata(
                     MediaMetadata.Builder().setDisplayTitle(it.title)
-                        .setArtworkUri(channel.icon.let { i -> Uri.parse(i) }).build()
+                        .setArtworkUri(it.icon?.let { i -> Uri.parse(i) }).build()
                 ).build()
             )
         }
@@ -58,24 +58,3 @@ private fun rememberExoPlayer(context: Context) = remember {
         playWhenReady = true
     }
 }
-
-//private fun Modifier.dPadEvents(
-//    exoPlayer: ExoPlayer,
-//    videoPlayerState: VideoPlayerState,
-//    pulseState: VideoPlayerPulseState
-//): Modifier = this.handleDPadKeyEvents(
-//    onLeft = {
-//        exoPlayer.seekBack()
-//        pulseState.setType(BACK)
-//    },
-//    onRight = {
-//        exoPlayer.seekForward()
-//        pulseState.setType(FORWARD)
-//    },
-//    onUp = { videoPlayerState.showControls() },
-//    onDown = { videoPlayerState.showControls() },
-//    onEnter = {
-//        exoPlayer.pause()
-//        videoPlayerState.showControls()
-//    }
-//)

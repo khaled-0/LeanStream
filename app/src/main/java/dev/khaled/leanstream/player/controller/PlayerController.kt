@@ -29,6 +29,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_BUFFERING
@@ -50,19 +51,20 @@ fun PlayerController(
     var controllerVisible by remember { mutableStateOf(true) }
     var isButtonFocused by remember { mutableStateOf(true) }
 
+    var mediaMetadata by remember { mutableStateOf(player.mediaMetadata) }
+
     var isPlaying by remember { mutableStateOf(true) }
     var isBuffering by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf<String?>(null) }
 
 
     val handler = remember { Handler(Looper.getMainLooper()) }
-    val controllerVisibilityRunnable =
-        remember {
-            Runnable {
-                if (isButtonFocused) return@Runnable
-                if (controllerVisible) controllerVisible = false
-            }
+    val controllerVisibilityRunnable = remember {
+        Runnable {
+            if (isButtonFocused) return@Runnable
+            if (controllerVisible) controllerVisible = false
         }
+    }
 
     fun triggerHideController() = run {
         handler.removeCallbacks(controllerVisibilityRunnable)
@@ -88,13 +90,17 @@ fun PlayerController(
                 super.onPlayerError(exception)
                 error = exception.message
                 controllerVisible = true
+                player.prepare() //TODO Auto Retry Toggle
+            }
+
+            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
+                super.onMediaItemTransition(mediaItem, reason)
+                mediaItem?.let { mediaMetadata = it.mediaMetadata }
             }
         }
 
         player.addListener(listener)
-        onDispose {
-            player.removeListener(listener)
-        }
+        onDispose { player.removeListener(listener) }
     }
 
 
@@ -142,23 +148,26 @@ fun PlayerController(
                     .onFocusEvent {
                         isButtonFocused = it.hasFocus
                         if (!it.hasFocus) triggerHideController()
-                    },
-                verticalAlignment = Alignment.CenterVertically
+                    }, verticalAlignment = Alignment.CenterVertically
             ) {
                 if (!isRunningOnTV) ExtraControls(backHandler)
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                FilledTonalIconButton(onClick = { player.seekToPreviousMediaItem() }) {
+                FilledTonalIconButton(enabled = player.hasPreviousMediaItem(),
+                    onClick = { player.seekToPreviousMediaItem() }) {
                     Icon(Icons.Rounded.SkipPrevious, contentDescription = null)
                 }
 
-                ChannelInfo(player.mediaMetadata)
+                ChannelInfo(mediaMetadata)
 
-                FilledTonalIconButton(onClick = { player.seekToNextMediaItem() }) {
+                FilledTonalIconButton(enabled = player.hasNextMediaItem(),
+                    onClick = { player.seekToNextMediaItem() }) {
                     Icon(Icons.Rounded.SkipNext, contentDescription = null)
                 }
             }
+
+
         }
     }
 }
