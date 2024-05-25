@@ -1,13 +1,10 @@
 name: Create Release
 
 permissions: write-all
-  
+
 on:
-  push:
-    branches:    
-      - main
-    tags:        
-      - v*.*
+  release:
+    types: [ published , prereleased ]
   workflow_dispatch:
 
 jobs:
@@ -20,8 +17,8 @@ jobs:
       - name: set up JDK
         uses: actions/setup-java@v4
         with:
-          java-version: '17'
-          distribution: adopt
+          java-version: '21'
+          distribution: 'temurin'
           cache: gradle
 
       - name: Create release key
