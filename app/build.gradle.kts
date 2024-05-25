@@ -84,26 +84,29 @@ android {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
+    implementation("androidx.core:core-ktx:1.13.1")
 
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.6.3")
 
     implementation("androidx.core:core-splashscreen:1.0.1")
 
-    implementation(platform("androidx.compose:compose-bom:2024.02.02"))
+    implementation(platform("androidx.compose:compose-bom:2024.05.00"))
     implementation("androidx.compose.material3:material3")
-    implementation("androidx.tv:tv-material:1.0.0-alpha10")
+    implementation("androidx.tv:tv-material:1.0.0-beta01")
 
 
     implementation("io.coil-kt:coil-compose:2.6.0")
     implementation("androidx.navigation:navigation-compose:2.7.7")
-    implementation("androidx.compose.material:material-icons-extended:1.6.3")
-    
-    implementation("androidx.media3:media3-exoplayer:1.3.0")
-    implementation("androidx.media3:media3-exoplayer-hls:1.3.0")
-    implementation("androidx.media3:media3-exoplayer-dash:1.3.0")
-    implementation("androidx.media3:media3-ui:1.3.0")
+    implementation("androidx.compose.material:material-icons-extended:1.6.7")
+
+    implementation("androidx.media3:media3-exoplayer:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-hls:1.3.1")
+    implementation("androidx.media3:media3-exoplayer-dash:1.3.1")
+    implementation("androidx.media3:media3-ui:1.3.1")
+    implementation("com.github.anilbeesetti.nextlib:nextlib-media3ext:0.7.1")
+    implementation("com.github.anilbeesetti.nextlib:nextlib-mediainfo:0.7.1")
+
 
     implementation("com.github.bjoernpetersen:m3u-parser:1.4.0")
 }
