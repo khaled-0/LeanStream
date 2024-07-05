@@ -41,7 +41,6 @@ import dev.khaled.leanstream.channels.item.ChannelsGrid
 import dev.khaled.leanstream.isRunningOnTV
 import dev.khaled.leanstream.playSoundEffectOnFocus
 import dev.khaled.leanstream.ui.Branding
-import kotlinx.serialization.ExperimentalSerializationApi
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -133,12 +132,11 @@ fun ChannelPickerScreen(
     }
 }
 
-@OptIn(ExperimentalSerializationApi::class)
 fun resetChannelsListConfirmation(context: Context, viewModel: ChannelViewModel) {
     AlertDialog.Builder(context).setTitle("Reset Channels")
         .setMessage("Do you really want to remove imported channels?")
         .setPositiveButton("Yes") { _, _ ->
-            viewModel.savePlaylistToDisk(context, emptyList());
+            viewModel.savePlaylistToDisk(context, emptyList())
             Toast.makeText(context, "Restart Application To Take Effect", Toast.LENGTH_SHORT).show()
         }.setNegativeButton("No", null).show()
 }

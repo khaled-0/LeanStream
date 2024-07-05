@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import dev.khaled.leanstream.channels.ChannelCategory
 import dev.khaled.leanstream.playSoundEffectOnFocus
 
-@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CategoryFilterRow(
     channelCategories: List<ChannelCategory>,

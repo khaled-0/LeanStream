@@ -32,7 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 
-@OptIn(ExperimentalSerializationApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun ImportPlaylistDialog(
     onDismiss: (success: Boolean) -> Unit,

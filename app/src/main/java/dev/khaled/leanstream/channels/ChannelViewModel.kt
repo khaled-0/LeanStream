@@ -8,7 +8,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.media3.common.util.UnstableApi
 import kotlinx.coroutines.launch
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.Serializable
@@ -19,9 +18,6 @@ import net.bjoernpetersen.m3u.M3uParser
 import net.bjoernpetersen.m3u.model.M3uEntry
 import java.io.File
 import java.net.URL
-import kotlin.OptIn
-import androidx.annotation.OptIn as AndroidxAnnotationOptIn
-
 
 @Serializable
 data class Channel(val title: String?, val url: String, val icon: String?, val category: String?)
@@ -71,7 +67,6 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
         viewModelScope.launch { load(application.applicationContext) }
     }
 
-    @OptIn(ExperimentalSerializationApi::class)
     fun load(context: Context) {
         _isLoading = true
 
@@ -87,7 +82,7 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
         _isLoading = false
     }
 
-    @ExperimentalSerializationApi
+    @OptIn(ExperimentalSerializationApi::class)
     fun savePlaylistToDisk(context: Context, channels: List<Channel> = _channels) {
         if (!channelFile(context).exists()) channelFile(context).createNewFile()
         val outputStream = context.openFileOutput(
@@ -97,8 +92,8 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
         outputStream.close()
     }
 
-    @ExperimentalSerializationApi
-    fun loadPlaylistFromDisk(context: Context) {
+    @OptIn(ExperimentalSerializationApi::class)
+    private fun loadPlaylistFromDisk(context: Context) {
         if (!channelFile(context).exists()) channelFile(context).createNewFile()
         val fileInputStream = context.openFileInput(channelFile(context).name)
         val bytes = fileInputStream.readBytes()
@@ -108,7 +103,6 @@ class ChannelViewModel(application: Application) : AndroidViewModel(application)
         _channels.addAll(Cbor.decodeFromByteArray<List<Channel>>(bytes))
     }
 
-    @AndroidxAnnotationOptIn(UnstableApi::class)
     fun parsePlaylist(playlistUrl: String): List<Channel> {
         val input = URL(playlistUrl).openStream().reader()
         val streamEntries: List<M3uEntry> = M3uParser.parse(input)

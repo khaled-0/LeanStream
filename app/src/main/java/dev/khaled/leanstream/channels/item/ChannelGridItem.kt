@@ -39,7 +39,6 @@ import dev.khaled.leanstream.conditional
 import dev.khaled.leanstream.isRunningOnTV
 import dev.khaled.leanstream.playSoundEffectOnFocus
 
-@OptIn(ExperimentalTvMaterial3Api::class)
 @Composable
 fun GridItem(
     channel: Channel,

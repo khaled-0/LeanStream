@@ -87,9 +87,6 @@ android {
 dependencies {
     implementation("androidx.core:core-ktx:1.13.1")
 
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.6.3")
-
     implementation("androidx.core:core-splashscreen:1.0.1")
 
     implementation(platform("androidx.compose:compose-bom:2024.06.00"))
@@ -107,6 +104,9 @@ dependencies {
     implementation("androidx.media3:media3-ui:1.3.1")
     implementation("com.github.anilbeesetti.nextlib:nextlib-media3ext:0.7.1")
     implementation("com.github.anilbeesetti.nextlib:nextlib-mediainfo:0.7.1")
+
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-core:1.6.3")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-cbor:1.6.3")
 
 
     implementation("com.github.bjoernpetersen:m3u-parser:1.4.0")
