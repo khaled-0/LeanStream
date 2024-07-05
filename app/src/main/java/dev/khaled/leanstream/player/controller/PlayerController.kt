@@ -1,6 +1,7 @@
 package dev.khaled.leanstream.player.controller
 
 import android.content.pm.ActivityInfo
+import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import androidx.compose.animation.AnimatedVisibility
@@ -19,7 +20,9 @@ import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,27 +33,32 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.MediaItem
+import androidx.media3.common.MediaMetadata
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.Player.STATE_BUFFERING
 import androidx.media3.exoplayer.ExoPlayer
+import dev.khaled.leanstream.channels.Channel
 import dev.khaled.leanstream.conditional
 import dev.khaled.leanstream.isRunningOnTV
 import dev.khaled.leanstream.ui.ScreenOrientation
+
 
 @Composable
 fun PlayerController(
     modifier: Modifier = Modifier,
     player: ExoPlayer,
     backHandler: () -> Unit,
+    playlist: List<Channel>,
+    initialChannel: Channel,
 ) {
-
 
     val isRunningOnTV = isRunningOnTV(LocalContext.current)
 
     var controllerVisible by remember { mutableStateOf(true) }
     var isButtonFocused by remember { mutableStateOf(true) }
 
+    var currentChannelIndex by remember { mutableIntStateOf(playlist.indexOf(initialChannel)) }
     var mediaMetadata by remember { mutableStateOf(player.mediaMetadata) }
 
     var isPlaying by remember { mutableStateOf(true) }
@@ -69,6 +77,17 @@ fun PlayerController(
     fun triggerHideController() = run {
         handler.removeCallbacks(controllerVisibilityRunnable)
         handler.postDelayed(controllerVisibilityRunnable, 3000)
+    }
+
+    fun loadChannel(index: Int) {
+        val channel = playlist[index]
+        player.setMediaItem(
+            MediaItem.Builder().setUri(channel.url).setMediaMetadata(
+                MediaMetadata.Builder().setDisplayTitle(channel.title)
+                    .setArtworkUri(channel.icon?.let { i -> Uri.parse(i) }).build()
+            ).build()
+        )
+        player.prepare()
     }
 
     DisposableEffect(Unit) {
@@ -93,9 +112,9 @@ fun PlayerController(
                 player.prepare() //TODO Auto Retry Toggle
             }
 
-            override fun onMediaItemTransition(mediaItem: MediaItem?, reason: Int) {
-                super.onMediaItemTransition(mediaItem, reason)
-                mediaItem?.let { mediaMetadata = it.mediaMetadata }
+            override fun onMediaMetadataChanged(metadata: MediaMetadata) {
+                super.onMediaMetadataChanged(metadata)
+                mediaMetadata = metadata
             }
         }
 
@@ -103,6 +122,7 @@ fun PlayerController(
         onDispose { player.removeListener(listener) }
     }
 
+    LaunchedEffect(Unit) { loadChannel(currentChannelIndex) }
 
     ScreenOrientation(orientation = ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
 
@@ -154,20 +174,18 @@ fun PlayerController(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                FilledTonalIconButton(enabled = player.hasPreviousMediaItem(),
-                    onClick = { player.seekToPreviousMediaItem() }) {
+                FilledTonalIconButton(enabled = currentChannelIndex > 0,
+                    onClick = { loadChannel(--currentChannelIndex) }) {
                     Icon(Icons.Rounded.SkipPrevious, contentDescription = null)
                 }
 
                 ChannelInfo(mediaMetadata)
 
-                FilledTonalIconButton(enabled = player.hasNextMediaItem(),
-                    onClick = { player.seekToNextMediaItem() }) {
+                FilledTonalIconButton(enabled = currentChannelIndex < playlist.size,
+                    onClick = { loadChannel(++currentChannelIndex) }) {
                     Icon(Icons.Rounded.SkipNext, contentDescription = null)
                 }
             }
-
-
         }
     }
 }
