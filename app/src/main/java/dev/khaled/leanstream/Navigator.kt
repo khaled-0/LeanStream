@@ -1,5 +1,6 @@
 package dev.khaled.leanstream
 
+import androidx.compose.animation.ExitTransition
 import androidx.compose.runtime.Composable
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
@@ -13,6 +14,7 @@ import dev.khaled.leanstream.channels.Channel
 import dev.khaled.leanstream.channels.ChannelPickerScreen
 import dev.khaled.leanstream.channels.ChannelViewModel
 import dev.khaled.leanstream.player.PlayerScreen
+import dev.khaled.leanstream.preferences.PreferenceScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.cbor.Cbor
 import kotlinx.serialization.decodeFromHexString
@@ -24,14 +26,19 @@ fun Navigator() {
     val navController = rememberNavController()
     val channelViewModel: ChannelViewModel = viewModel()
 
-    NavHost(
-        navController = navController,
+    NavHost(navController = navController,
         startDestination = Route.ChannelPicker.route,
-    ) {
+        exitTransition = { ExitTransition.None }) {
+
+        composable(route = Route.Preferences.route) {
+            PreferenceScreen(channelViewModel)
+        }
 
         composable(route = Route.ChannelPicker.route) {
-            ChannelPickerScreen(channelViewModel) { channel ->
+            ChannelPickerScreen(channelViewModel, openChannel = { channel ->
                 navController.navigateSingleTop(Route.Player.launch(channel))
+            }) {
+                navController.navigateSingleTop(it.toString())
             }
         }
 
@@ -45,6 +52,8 @@ fun Navigator() {
                 navController.popBackStack()
             }
         }
+
+
     }
 }
 
@@ -55,6 +64,7 @@ fun NavHostController.navigateSingleTop(route: String) = this.navigate(route) {
 }
 
 sealed class Route(val route: String) {
+    data object Preferences : Route("Preferences")
     data object ChannelPicker : Route("ChannelPicker")
     data object Player : Route("Player") {
         @ExperimentalSerializationApi

@@ -17,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import dev.khaled.leanstream.playSoundEffectOnFocus
 
@@ -31,7 +32,7 @@ fun ImportPlaylistPrompt(result: () -> Unit) {
             Icons.Rounded.VideoLibrary, modifier = Modifier.size(64.dp), contentDescription = null
         )
         Spacer(modifier = Modifier.height(8.dp))
-        Text(text = "No entries found. Import a playlist (.m3u8) below")
+        Text(text = "No entries found. Import a playlist (.m3u8) below", textAlign = TextAlign.Center)
         Spacer(modifier = Modifier.height(8.dp))
         OutlinedButton(
             onClick = { showDialog = true }, modifier = Modifier.playSoundEffectOnFocus()

@@ -1,8 +1,5 @@
 package dev.khaled.leanstream.channels
 
-import android.app.AlertDialog
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +31,7 @@ import androidx.compose.ui.focus.onFocusEvent
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import dev.khaled.leanstream.Route
 import dev.khaled.leanstream.channels.filter.CategoryFilterRow
 import dev.khaled.leanstream.channels.filter.ChannelSearchFilter
 import dev.khaled.leanstream.channels.importer.ImportPlaylistPrompt
@@ -46,7 +44,9 @@ import dev.khaled.leanstream.ui.Branding
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ChannelPickerScreen(
-    viewModel: ChannelViewModel = viewModel(), openChannel: (channel: Channel) -> Unit
+    viewModel: ChannelViewModel = viewModel(),
+    openChannel: (channel: Channel) -> Unit,
+    navigateTo: (route: Route) -> Unit,
 ) {
     val context = LocalContext.current
     val compactAppBar = remember { isRunningOnTV(context) }
@@ -109,7 +109,7 @@ fun ChannelPickerScreen(
                 })
 
             IconButton(onClick = {
-                resetChannelsListConfirmation(context, viewModel)
+                navigateTo(Route.Preferences)
             }, content = {
                 Icon(Icons.Outlined.Settings, null)
             })
@@ -130,13 +130,4 @@ fun ChannelPickerScreen(
             openChannel(it)
         }
     }
-}
-
-fun resetChannelsListConfirmation(context: Context, viewModel: ChannelViewModel) {
-    AlertDialog.Builder(context).setTitle("Reset Channels")
-        .setMessage("Do you really want to remove imported channels?")
-        .setPositiveButton("Yes") { _, _ ->
-            viewModel.savePlaylistToDisk(context, emptyList())
-            Toast.makeText(context, "Restart Application To Take Effect", Toast.LENGTH_SHORT).show()
-        }.setNegativeButton("No", null).show()
 }
