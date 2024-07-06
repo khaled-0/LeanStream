@@ -17,9 +17,14 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
-import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.focus.onFocusEvent
+import androidx.compose.ui.graphics.BlendMode
+import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.CompositingStrategy
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
 import dev.khaled.leanstream.channels.ChannelCategory
 import dev.khaled.leanstream.playSoundEffectOnFocus
@@ -30,10 +35,17 @@ fun CategoryFilterRow(
     currentSelection: ChannelCategory,
     onSelect: (ChannelCategory) -> Unit,
 ) {
+
+    val rightFade = Brush.horizontalGradient(
+        0.9f to Color.Red,
+        1f to Color.Transparent
+    )
+
     LazyRow(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         verticalAlignment = Alignment.CenterVertically,
         contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
+        modifier = Modifier.fadingEdge(rightFade)
     ) {
         items(channelCategories) {
 
@@ -61,3 +73,10 @@ fun CategoryFilterRow(
         }
     }
 }
+
+fun Modifier.fadingEdge(brush: Brush) = this
+    .graphicsLayer(compositingStrategy = CompositingStrategy.Offscreen)
+    .drawWithContent {
+        drawContent()
+        drawRect(brush = brush, blendMode = BlendMode.DstIn)
+    }
